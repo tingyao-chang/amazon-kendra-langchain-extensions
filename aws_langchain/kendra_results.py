@@ -20,7 +20,14 @@ def get_top_n_results(resp, count):
     return {"page_content":combined_text, "metadata":{"source":doc_uri, "title": doc_title, "excerpt": doc_excerpt, "type": r_type}}
 
 def kendra_query(kclient, kquery, kcount, kindex_id):
-    response = kclient.query(IndexId=kindex_id, QueryText=kquery.strip())
+    response = kclient.query(IndexId=kindex_id, QueryText=kquery.strip(), AttributeFilter = {
+            "EqualsTo": {
+                "Key": "_language_code",
+                "Value": {
+                    "StringValue": "zh"
+                    }
+                }
+            })
     if len(response["ResultItems"]) > kcount:
         r_count = kcount
     else:
